@@ -1,7 +1,6 @@
 import streamlit as st
 import pickle
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
 
 # Load model
 model = pickle.load(open('my_model_DStree_Dexi.pkl', 'rb'))
@@ -11,7 +10,6 @@ st.set_page_config(page_title="Loan Approval Predictor", page_icon="💰", layou
 st.title('💰 Loan Approval Predictor')
 st.write('Enter applicant details below to predict loan approval.')
 
-# Input fields
 col1, col2 = st.columns(2)
 
 with col1:
@@ -29,25 +27,27 @@ with col2:
     bankrupt = st.selectbox('Ever Bankrupt or Foreclose', [0, 1])
     fico_group = st.selectbox('FICO Score Group', ['poor', 'fair', 'good', 'very_good', 'excellent'])
 
-# Predict
+# Encoding maps (must match training data)
+reason_map = {'cover_an_unexpected_cost': 0, 'credit_card_refinancing': 1, 'debt_consolidation': 2, 'home_improvement': 3, 'major_purchase': 4, 'other': 5}
+employment_map = {'full_time': 0, 'part_time': 1, 'self_employed': 2}
+sector_map = {'communication_services': 0, 'consumer_discretionary': 1, 'consumer_staples': 2, 'energy': 3, 'financials': 4, 'healthcare': 5, 'industrials': 6, 'information_technology': 7, 'materials': 8, 'real_estate': 9, 'utilities': 10}
+lender_map = {'A': 0, 'B': 1, 'C': 2}
+fico_group_map = {'excellent': 0, 'fair': 1, 'good': 2, 'poor': 3, 'very_good': 4}
+
 if st.button('🔍 Predict Loan Approval'):
     input_data = pd.DataFrame({
-        'Reason': [reason],
+        'Reason': [reason_map[reason]],
         'Granted_Loan_Amount': [loan_amount],
         'Requested_Loan_Amount': [requested],
         'FICO_score': [fico],
-        'Fico_Score_group': [fico_group],
-        'Employment_Status': [employment],
-        'Employment_Sector': [sector],
+        'Fico_Score_group': [fico_group_map[fico_group]],
+        'Employment_Status': [employment_map[employment]],
+        'Employment_Sector': [sector_map[sector]],
         'Monthly_Gross_Income': [income],
         'Monthly_Housing_Payment': [housing],
         'Ever_Bankrupt_or_Foreclose': [bankrupt],
-        'Lender': [lender]
+        'Lender': [lender_map[lender]]
     })
-
-    le = LabelEncoder()
-    for col in input_data.select_dtypes(include='object').columns:
-        input_data[col] = le.fit_transform(input_data[col])
 
     prediction = model.predict(input_data)[0]
 
