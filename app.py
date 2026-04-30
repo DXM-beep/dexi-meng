@@ -19,15 +19,27 @@ with col1:
     loan_amount = st.number_input('Granted Loan Amount ($)', min_value=0, value=50000)
     requested = st.number_input('Requested Loan Amount ($)', min_value=0, value=55000)
 
+# Auto-assign FICO group based on score
+if fico >= 800:
+    fico_group = 'excellent'
+elif fico >= 740:
+    fico_group = 'very_good'
+elif fico >= 670:
+    fico_group = 'good'
+elif fico >= 580:
+    fico_group = 'fair'
+else:
+    fico_group = 'poor'
+
 with col2:
+    st.text_input('FICO Score Group (auto)', value=fico_group, disabled=True)
     reason = st.selectbox('Loan Reason', ['cover_an_unexpected_cost', 'credit_card_refinancing', 'home_improvement', 'debt_consolidation', 'major_purchase', 'other'])
     employment = st.selectbox('Employment Status', ['full_time', 'part_time', 'self_employed'])
     sector = st.selectbox('Employment Sector', ['information_technology', 'consumer_discretionary', 'energy', 'healthcare', 'financials', 'industrials', 'materials', 'real_estate', 'utilities', 'communication_services', 'consumer_staples'])
     lender = st.selectbox('Lender', ['A', 'B', 'C'])
     bankrupt = st.selectbox('Ever Bankrupt or Foreclose', [0, 1])
-    fico_group = st.selectbox('FICO Score Group', ['poor', 'fair', 'good', 'very_good', 'excellent'])
 
-# Encoding maps (must match training data)
+# Encoding maps
 reason_map = {'cover_an_unexpected_cost': 0, 'credit_card_refinancing': 1, 'debt_consolidation': 2, 'home_improvement': 3, 'major_purchase': 4, 'other': 5}
 employment_map = {'full_time': 0, 'part_time': 1, 'self_employed': 2}
 sector_map = {'communication_services': 0, 'consumer_discretionary': 1, 'consumer_staples': 2, 'energy': 3, 'financials': 4, 'healthcare': 5, 'industrials': 6, 'information_technology': 7, 'materials': 8, 'real_estate': 9, 'utilities': 10}
