@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 # Load model
-model = pickle.load(open('my_model.pkl', 'rb'))
+model = pickle.load(open('my_model_DStree_Dexi.pkl', 'rb'))
 
 st.set_page_config(page_title="Loan Approval Predictor", page_icon="💰", layout="centered")
 
