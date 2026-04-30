@@ -65,4 +65,4 @@ if st.button('🔍 Predict Loan Approval'):
     if prediction == 1:
         st.success('✅ Loan Approved!')
     else:
-        st.error('❌ Loan Denied')
+        st.error('❌ Loan Not Approced!')
